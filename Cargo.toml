@@ -1,0 +1,16 @@
+[package]
+name = "pyskim"
+version = "0.1.0"
+authors = ["Robert Deaton <rdeaton@platipy.org>"]
+edition = "2018"
+
+[lib]
+name = "pyskim"
+crate-type = ["cdylib"]
+
+[dependencies]
+skim = "0.6.6"
+
+[dependencies.pyo3]
+version = "0.7.0"
+features = ["extension-module"]
