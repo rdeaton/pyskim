@@ -33,15 +33,12 @@ impl Read for PyIteratorReader<'_> {
 #[pymodule]
 fn pyskim(_py: Python, m: &PyModule) -> PyResult<()> {
     #[pyfn(m, "quick_skim")]
-    fn quick_skim(py: Python, it: PyObject) -> PyResult<(PyObject)> {
+    fn quick_skim(py: Python<'static>, it: PyObject) -> PyResult<(PyObject)> {
         // TODO(rdeaton): This currently crashes if given non-iterators due to
         // https://github.com/PyO3/pyo3/issues/494
         let iter = PyIterator::from_object(py, &it)?;
         let reader = PyIteratorReader { iter: iter };
         let f = BufReader::new(reader);
-        for line in f.lines() {
-            println!("{}", line.unwrap());
-        }
 
         let mut ret = Vec::new();
 
@@ -53,7 +50,7 @@ fn pyskim(_py: Python, m: &PyModule) -> PyResult<()> {
 
         let input = "aaaaa\nbbbb\nccc".to_string();
 
-        let selected_items = Skim::run_with(&options, Some(Box::new(Cursor::new(input))))
+        let selected_items = Skim::run_with(&options, Some(Box::new(f)))
             .map(|out| out.selected_items)
             .unwrap_or_else(|| Vec::new());
 
