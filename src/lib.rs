@@ -28,8 +28,6 @@ impl<'a> PyIteratorReader<'a> {
 
 impl Read for PyIteratorReader<'_> {
     fn read(&mut self, mut buf: &mut [u8]) -> Result<usize> {
-        // TODO(rdeaton): We should make sure we're copying the full item here, not just the first
-        // n bytes
         if self.current_item.is_none() {
             let n = self.iter.next();
             if n.is_none() {
@@ -40,9 +38,6 @@ impl Read for PyIteratorReader<'_> {
             self.current_item = Some(raw_buf);
         }
         let pybuf = self.current_item.unwrap();
-        dbg!(pybuf.len());
-        dbg!(self.buffer_dist);
-        dbg!(buf.len());
         if pybuf.len() - self.buffer_dist < buf.len() {
             let ret =
                 Ok(buf.write(&pybuf[self.buffer_dist..]).unwrap() + buf.write(b"\n").unwrap());
