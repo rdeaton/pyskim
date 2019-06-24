@@ -9,8 +9,9 @@ name = "pyskim"
 crate-type = ["cdylib"]
 
 [dependencies]
-#skim = "0.6.6"
-skim = { git = "https://github.com/rdeaton/skim.git" }
+skim = "0.6.8"
+#skim = { git = "https://github.com/rdeaton/skim.git" }
+#skim = { path = "../skim/" }
 
 [dependencies.pyo3]
 version = "0.7.0"
